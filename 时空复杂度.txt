@@ -1,0 +1,58 @@
+评估维度-时间复杂度
+计算机speed估值:10^9s(实测约10**7或因内存处理速度受限)
+n代表体量,T(n)时间复杂度是算法执行步骤的数量,O(n)表示复杂度的数量级(定义参见0_prin)
+
+O(1)<O(log(n))<O(n)<O(n^2)<O(n^3)<O(n!)(n>x,x∈ N)(可用数学归纳法证明 参见1_meth)
+
+1. T(n)=2 O(1)
+e.g.
+void eg(int n){
+   System.out.println(1);
+   System.out.println(2);
+}
+
+
+2.T(n)=3n O(n) 每次3,n次 
+e.g.
+void eg(int n){
+    for(int i=1; i<n+1; i++){
+        System.out.println(1*i);
+        System.out.println(2*i);
+        System.out.println(3*i);
+    }
+}
+
+3. T(n)=5log2(n) O(log(n)) 每次5, 下次算的次数是当前实际次数的翻倍,次数永远少于n次,实际的时间复杂度估值
+e.g.
+void eg(int n){
+   for(int i=1; i<n; i*=2){
+       System.out.println(1*i); 
+       System.out.println(2*i);
+       System.out.println(3*1);
+       System.out.println(4*i);
+       System.out.println(5*1);
+   }
+}
+
+4. T(n)= 0.5n^2 + 0.5n O(n^2) 每次(直到n次),当前的次数-1,加本次1,即当前的次数:1+2+...+n=(1+n)n/2
+e.g.
+void eg(int n){
+   for(int i=1; i<n+1; i++){
+       for(int j=1; j<i; j++){
+           System.out.println(j);
+       }
+       System.out.println(i);
+   }
+}
+
+
+*O(f(n))表示渐近时间复杂度(asymptotic time complexity)时,f(n)只保留最高阶项,系数=1.
+*空间复杂度 类似的 S(n)=O(f(n)) 优先级低于时间复杂度
+1常量空间a,b=1,2->O(1) 
+2线性空间a=[1,2...n]->O(n) 
+3二维空间a=np.matrix([[1,2..n]..[1,2..n]]) ->O(n^2)
+4递归空间 [[method],[n]]  [[method],[n-1]]... [[method],[1]] -> O(n)
+def f(n):
+	if n<=1:
+		return
+	f(n-1)

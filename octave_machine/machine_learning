@@ -1,0 +1,184 @@
+Machine Leaning
+1959 Arthur Samuel: checkers player
+1998 Tom Mitchell: learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E #神经网络#
+	e.g. T: classifying email as spam or not spam
+	     E: Watching you label emails as spam or not spam
+	     P: The number (or fraction) of emails correctly classified as spam/not spam
+
+Two types of machine learning algorithms:
+1. supervised learning: we teach
+2. unsupervised learning: itself teach
+
+1.supervised learning
+'correct answers' were given
+1)Regression回归问题: Predict continuous valued output(e.g.housing price)
+2)classification分类问题: Discrete valued output(0/1/3)
+e.g.二维问题肿块是良性还是恶性 x恶性 o良性
+^age(y)				特征维度叠加:
+|o o\x x  x x			-Clump thickness
+| o  \ x  x			-Uniformity of Cell Size
+|   o \ x o			-Uniformity of Cell Shape
+| o  x \x   x			-...
+|   o   \x
+|____o___\_x____> tumor size(x)
+
+思维实验:
+某个点的值:某一方向的长度,越长颜色越红,越短越紫,或者是间断的一些取值
+某个点+1维展开:垂直于长度方向且不同与-1维某一方向延长为n个-1维轴,值也延伸并变长变短变颜色
+零维:一点之花,一维:杠上垂花;二维:杠加诸杠;n维:杠加诸*(n-1)杠;全攒在一块儿了
+n
+一维:	-ooxo|xx-->tumor size x个值按照取值模糊的划分,划分点
+二维:	tumor size轴根据age的n个值+1维展开,每个tumorsize轴划分,形成二维划分曲线;
+三维:	age轴+1维展开clump_thickness,每个clump_thickness一种划分曲线,形成"三维"划分"面";转换,假设三维size age thick互相垂直,长度被降维成一个带数值的点,可以划分成一种曲面(曲线按照thick方向延伸);
+...
+n维:   n-1轴+1维展开划分,形成"n维"划分"面"
+
+#Support Vector Machine 支持向量机#相关的算法algorithm#
+支持计算机处理无穷多的特征
+
+
+
+2. unsupervised learning
+1) clustering algorithm 聚类算法
+不知道ox的情况下作分类
+基于非连续性的分类存在的gap
+想象三维世界里的两团东西,自然能想到分成A/B类
+所以重要的不止是分割,还有间距
+e.g. cocktail party algorithm 
++A麦克风: 1,2,3,4
+|
++B麦克风: 2,3,4,5
+分出两种声源
+[W,s,v] = svd((repmat(sum(x.*x,1),size(x,1),1).*x)*x');
+Octave
+
+
+ 
+1.1
+Supervised learning-Regression
+1.training set
+	|
+2.learning algorithm
+	|output a func
+3.h(hypothesis)
+
+e.g.housing price
+1. training set
+i |size(feet^2) (xi)| Price($) in 1000's (yi)
+-------------------+-----------------------
+1:|	2104	   |	260
+2:|	1416	   |    232
+..|	...	   |	...
+M:|	600  	   |	100
+M=47(Number of training size)
+
+3.y=hθ(x)
+线性回归linear regression: hθ(x)=θ0+θ1*x
+单变量线性回归 univariate linear regression
+how to get θ0 and θ1?
+		M
+J(θ0,θ1)=(1/2m)*∑ (hθ(xi)-yi)^2
+		i=1
+J:cost function/squared error (cost) function 代价函数/平方误差函数(永远是弓状函数,凸函数
+Convex function,所以局部最优总是全局最优)
+问题转换:找到使J(θ0,θ1)最小的θ0,θ1
+即Goal: minimize J(θ0,θ1)
+	   θ0,θ1
+
+当只有一个变量θ1, 即θ0=0时
+h:仅根据θ1区分的线性函数
+J:每个θ1的线性函数,对应一个J(θ1)的值;看作数轴上深浅不同的点形成色带,或者二维展开显示数值,成为一条y=0上方的彩色抛物线
+Goal: J最小时θ1的值
+
+当有两个变量θ0和θ1时:
+h:根据θ0,θ1两个变量区分的线性函数
+J:每个(θ0,θ1)坐标,对应一个J(θ0,θ1)的值,看作二维平面上深浅不同的点形成彩虹晕,或者三维展开显示数值,成为z=0上方的彩虹碗,二维面及三维体的等高线(彩虹气泡和蘑菇云)可以描述其形状
+Goal: J最小时(θ0,θ1)坐标
+
+假设当有三个变量abc的时后
+h:根据abc变量区分的曲线,比如抛物线ax^2+bx+c
+J:每个(a,b,c)坐标对应一个J(a,b,c)的值,看作三维空间上深浅不同的点形成的彩色星云,或者四维展开显示数值,成为流星云,三维空间的等高面(卷心菜和模糊的叠影的卷心菜)可以描述其形状
+Goal: J最小时(a,b,c)坐标
+
+假设有n个变量a,b,c,...n
+h:根据a,b,c...n区分的曲线,如n-1次方程ax^(n-1)+bx^(n-2)+cx^(n-3)+...+n
+J:每个(a,b,c,...n)坐标对应一个J(a,b,c,...n)的值,看作n维空间的深浅不同的点(n+1)维展开显示其数值
+Goal: J最小时(a,b,c...n)坐标
+
+回归问题思路之一:底层的无杠之杠(n之杠)变身其最短之花串,依次变杠为串,直到找出最小的花串.
+回归问题思路之二:*梯度下降法
+
+1.1.1
+*Supervision_regression_Gradient descent梯度下降法(除了线性回归,其它地方也用得上)
+aka:"Batch" Gradient Descent(因每次求便导,都要全体数据计算差值求loss function)
+outline:
+1.start with some θ0,θ1,θ2,...,θn say θ0=0, θ1=0,...,θn=0
+2.keep changing  θ0,θ1,θ2,...,θn to reduce J(a,b,c...n) until hopfully we end up at a minumum
+e.g.
+递归思想: θ0,θ1,θ2,...,θn-1不变的值如0, θn小小的变化(理想是每串花遍历,连续的情况只能跳着来)着直到找到这种情况下 θn之杠的相对最小,回归成θn-1杠上的一串长花,变化,n-1小小变化,每一个变化类比n梯度变化得到n-1杠上的不同花,直到n-1变成无杠之花,以此类推,最终得到主杠a上的最长花串
+梯度下降思想:在成波搓的花串的某个起始花朵末端,放眼望去以下降最快的方式攀越到附近(或者是本地)的一个最接地气的花串,直到再无可攀的花,已经在最这小片花的最下了;在选择花串大小的时候,其实已经选择了梯度,因为连续变化的情况下,花串是无限小的;在只有 θ0,θ1的情况下,平面上每个点只有一串花
+
+repeat until convergence{
+θj:= θj - α∂/∂θj J(θ1,θ2,...,θn) (for j=1,2,...n)
+}
+
+α:learning rate,梯度的大小
+∂/∂θj J(θ1,θ2,...θn):(θ1,θ1,...θn)位置的*(偏)导数
+simultaneously update θ1,... θn
+
+*(偏)导数
+^J(θj)
+|.	 .
+| .	x
+|   . .
++------------>θj
+
+j=1时,一维时,
+x点,梯度下降取θ1:θ1- α∂/∂θ1 J(θ1),
+∂/∂θ1 J(θ1) 是(θ1)维度x点的(偏)导数,即x点的斜率,记作k
+因α>0,所以下一位置会左移kα的值,k越大,左移动的越快,大刀阔斧,k越小,反而慢慢来,寻找最值,k=0原地不动,找到最值
+梯度下降看作是沿-θj轴偏移kα的值
+
+如x的偏导数仍然可导,即斜线是一定角度的斜面,保持θj数值面夹角斜率kj的同时,θj+1数值面x点的切面,斜线x点
+相切,偏导斜率kj+1; 易证此时斜面和曲面相切**
+沿着-θ1,-θ2,...-θn移动k1α,k2α,...knα,重复直到k1=k2=...=kn=0,躺平不动
+
+**想像一个爪篱,相交直线交点上相切的曲线,其曲面和直线相交的平面相切
+  .    *  .     
+  *     / .
+  * . */ .
+...*../.............
+     /
+    / 
+
+偏导数计算
+				  m			
+∂/∂θj J(θ1,θ2,...θn)=∂/∂θj (1/2m)*∑ (hθ(xi)-yi)^2 
+                		  i=1			 
+(#微积分#)
+47个房价样本案例:hθ(x)=θ2*x+θ1
+	    47
+j=1: (1/47)*∑ (hθ(xi)-yi)*1 :θ1和数值维度的导数
+	    i=1
+	   47
+j=2: (1/47)*∑ (hθ(xi)-yi)*xi :θ2和数值维度的偏导数
+	   i=1
+(xi,yi,m都是常数,之和θ1,θ2,...θn有关)
+(偏导数求导需要把除自身意外的变量当作常数对待,
+复合函数求导:
+设u=g(x)，对f(u)求导得：f'(x)=f'(u)*g'(x)；
+u(x),v(x)可导： (u±v)′=u′±v′ (uv)′=u′v+uv′ (u/v)=(u′v-uv′)/v² (v≠0)
+)
+θ1=θ2=0
+α=0.01
+xi=[2104 1416...600]
+yi=[260 232 ...100]
+theta=zeros(2,1)
+repeat until convergence{
+			47
+θj:= θj - α∂/∂θj (1/94)*∑ (θ2*xi+θ1-yi)^2 (for j=1,2)
+			i=1
+}
+
+1.1.2
+*Normal equations methods正规方程组方法

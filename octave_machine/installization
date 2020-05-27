@@ -1,0 +1,12 @@
+下载
+sudo apt-get install flatpak
+下载库flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.octave.Octave
+执行flatpak run org.octave.Octave
+
+Uninstall
+flatpak uninstall org.octave.Octave
+sudo apt-get remove flatpak
+
+reference:http://ubuntuhandbook.org/index.php/2018/07/install-latest-gnu-octave-4-4-ubuntu-18-04/
+-----------------------------------------------------------------------
