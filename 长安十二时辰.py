@@ -7,6 +7,9 @@ import os
 import datetime
 
 def chang_an_time():
+    '''
+    长安十二时辰
+    '''
     h = int(time.strftime('%H'))  # hour
     # hour_chang_an 时辰
     str_hour = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥','子']
