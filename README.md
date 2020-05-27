@@ -1,0 +1,2 @@
+# trinket
+funny functions
