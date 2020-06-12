@@ -1,62 +1,120 @@
-%initialization
+启动 flatpak run org.octave.Octave
+
+说明
+%: 表示注释
 clc: 清空屏幕
-fprintf(''): 打印字符串
 pause:	阻塞函数,任意按键可开始
+
+IO
+fprintf(''): 打印字符串
 data=load('test.txt'): 载入数据 一般格式:
  1 2
  3 4
-同一个文件夹下,函数能直接调用,通过引用不带后缀的名字可以执行文件
+save 'testcopy.txt' data: 保存变量到文件
+同一个文件夹下,通过引用不带后缀的名字可以执行文件,文件内函数能直接调用
 
+逻辑语法
 for
 > for i= 1:4
-> fprintf('1');
+> fprintf('1');%如果没有;会打印出来似乎很多时候都是如此
 > end
 1111
 
+函数
 Function
 > function y=f(x,y) %function [y1,y2]只返回y1
-> y=sqrt(x^2+y^2); %如果没有;会打印出来似乎很多时候都是如此
+> y=sqrt(x^2+y^2); 
 > end
 > f(3,4)
 
-Matrix
-a=[1 2]
+矩阵Matrix
+写法 A=[1 2]; a.k.a. 1 x 2 matrix or ℝ ¹*²(通常字母大写) 1*2表示维度
 	1 2
-a'
+矩阵倒置(transpose), A'
 	1
 	2
-b=[3;4]
+向量B=[3;4]; 一列矩阵称为向量,2-dimensional vector ℝ ²
 	3
 	4
-rand/zeros(2,2)
+随机/零矩阵rand/zeros(2,2)
    0.38842   0.48959
    0.83877   0.26917
-a(1)
+矩阵的下标位置A(1,1)(如果A(k)则默认第k行的第一个数字); 
 	1
-[a,a]
+矩阵的左右合并,每一行的列合并 [A,A]
 	1 2 1 2
-c=[a',b]
+C=[A',B]
 	1 3
 	2 4
-c-b(类似于ndarray的broadcast)
-	2 0
+公式运算
+  矩阵加减 C-B(类似于ndarray)
+	2  0
 	-2 0
-c*b
+  矩阵乘(类似于python的matrix),A * B=X, A: m*n B: n*m Xij=Ai1*B1j+Ai2*B2j...+Ain*Bnj
+	符合结合律(associative property) A*B*C = A * (B*C)
+	不符合交换律(commutative property) A*B  != B*A
+  C*B
 	15
 	22
-b.^2 %加.相当于看作ndarray适用于broadcast .*等同
+  方阵矩阵除
+    若R1*X=R2,则:
+    要求1) R1 n*n方阵,R2和X要么ℝ ⁿ*ⁿ²,n2可以和n不等;
+	2) R1不是奇异阵²
+	Xij = (R1第i列替换R2第j列行列式¹)/(R1行列式)[证明方法详见math_matrix]
+	      (行(x)列(r1)列(x)列(r2)
+    同理(行变列 i变j)
+    若X*R1=R2,则:
+    要求1) R1 n*n方阵,R2和X要么ℝ ⁿ²*ⁿ,n2可以和n不等;
+	2) R1不是奇异阵²;(但其实即便是奇异阵,也可求 R1/R1 * R1=R1 isok,极限思想?)
+	Xij = (R1第j行替换R2第i行行列式¹)/(R1行列式)[证明方法详见math_matrix]
+		(列(x)行(r1)行(x)行(r2))
+    R1=	1 2 3
+	4 5 6
+	7 8 9
+    R2=	100	200	300
+	1000	2000	3000
+	10000	20000	30000
+    X=	X₁₁	X₁₂	X₁₃
+	X₂₁	X₂₂	X₂₃
+	X₃₁	X₃₂	X₃₃
+
+    ¹   行列式记作det: 如det(R1)的: 1*5*9+7*2*6+4*8*3-1*8*6-4*2*9-7*5*3=0; 
+    ²	行列式等于0的方阵是奇异(singuar)或退化(degenerate)矩阵
+
+    矩阵点乘除幂
+    B.^2 %加.相当于看作ndarray规则满足broadcast, .* ./等同,B^2则是矩阵乘;标量可以直接*/效果一样
 	9
 	16
-sum(b.^2)
-	25
-length/rows/columns(b) 返回行列的最大值/行/列
+
+    单位矩阵I Identity matrix: 对角线1 其他0; A * I = I * A = A
+	1 0 0 0
+	0 1 0 0
+	0 0 1 0
+	0 0 0 1	
+
+    矩阵逆运算,逆矩阵 行列式不为0(但是即便是0也没事 可以伪逆pinv(A),也是极限吧)的方阵A,
+	(n*m also works for pinv, if n<m: A * pinv(A)=I, else: pinv(A)*A=I)
+	 A*A⁻¹=A⁻¹*A=I 
+	[证明方法详见math_matrix]
+
+    求和sum(C),上下相加,std/mean/max/min 标准差/平均数/最大/最小类同
+	3 7
+    矩阵大小 length/rows/columns(B) 返回行列数的最大值/行/列
 	2/2/1
 
 
-Plot(似乎最多打开一个)
+Plot
+plot(似乎最多打开一个window)
 plot(a',b,'rx'/'-','MarkerSize',10,'LineWidth',3');
+   a',b is 向量, rx is x point, '-' is line,默认折线
 plot(1); hold on; plot(2) 图层可以相互可见
 logspace(a,b,n)第一个是10^a，最后一个10^b，形成总数为n个元素的等比数列
 linspace(a,b,n)第一个是a，最后一个b，形成总数为n个元素的等差数列
 xlabel('size');
 ylabel('price');
+hold off; (应该是只是plot会重新绘制 原图层看不到了)
+
+
+
+
+

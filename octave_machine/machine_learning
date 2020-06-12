@@ -1,4 +1,4 @@
-Machine Leaning
+chine Leaning
 1959 Arthur Samuel: checkers player
 1998 Tom Mitchell: learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E #神经网络#
 	e.g. T: classifying email as spam or not spam
@@ -23,15 +23,18 @@ e.g.二维问题肿块是良性还是恶性 x恶性 o良性
 |____o___\_x____> tumor size(x)
 
 思维实验:
-某个点的值:某一方向的长度,越长颜色越红,越短越紫,或者是间断的一些取值
-某个点+1维展开:垂直于长度方向且不同与-1维某一方向延长为n个-1维轴,值也延伸并变长变短变颜色
+回归问题:值连续
+某个点的值:某一点的长度,想象一株藤花
+一维数轴: 一排藤花
+1维展开:垂直于长度方向且不同与-1维某一方向加数轴,原数轴每点如此.成为一片藤花
 零维:一点之花,一维:杠上垂花;二维:杠加诸杠;n维:杠加诸*(n-1)杠;全攒在一块儿了
+分类问题:值断续,上述藤花之间有间隔
 n
-一维:	-ooxo|xx-->tumor size x个值按照取值模糊的划分,划分点
-二维:	tumor size轴根据age的n个值+1维展开,每个tumorsize轴划分,形成二维划分曲线;
+一维:	-ooxo|xx-->tumor size x个值按照间隔 找一个断点
+二维:	tumor size轴根据age的n个值+1维展开,每个tumorsize轴划分,形成二维划分曲线如上图;
 三维:	age轴+1维展开clump_thickness,每个clump_thickness一种划分曲线,形成"三维"划分"面";转换,假设三维size age thick互相垂直,长度被降维成一个带数值的点,可以划分成一种曲面(曲线按照thick方向延伸);
 ...
-n维:   n-1轴+1维展开划分,形成"n维"划分"面"
+n维:    不同维度的分类讨论,直到找到对应的枝桠
 
 #Support Vector Machine 支持向量机#相关的算法algorithm#
 支持计算机处理无穷多的特征
@@ -55,7 +58,7 @@ Octave
 
  
 1.1
-Supervised learning-Regression
+Supervised learning-Regression回归问题
 1.training set
 	|
 2.learning algorithm
@@ -72,10 +75,10 @@ i |size(feet^2) (xi)| Price($) in 1000's (yi)
 M:|	600  	   |	100
 M=47(Number of training size)
 
-3.y=hθ(x)
-线性回归linear regression: hθ(x)=θ0+θ1*x
-单变量线性回归 univariate linear regression
-how to get θ0 and θ1?
+3.hypothesis y=hθ(x)
+e.g.  hθ(x)=θ0+θ1*x
+
+2 learning algorithm 得到3的方法
 		M
 J(θ0,θ1)=(1/2m)*∑ (hθ(xi)-yi)^2
 		i=1
@@ -87,7 +90,7 @@ Convex function,所以局部最优总是全局最优)
 
 当只有一个变量θ1, 即θ0=0时
 h:仅根据θ1区分的线性函数
-J:每个θ1的线性函数,对应一个J(θ1)的值;看作数轴上深浅不同的点形成色带,或者二维展开显示数值,成为一条y=0上方的彩色抛物线
+J:每个θ1的线性函数,对应一个J(θ1)的值;看作一条y=0上方的彩色抛物线
 Goal: J最小时θ1的值
 
 当有两个变量θ0和θ1时:
@@ -97,35 +100,42 @@ Goal: J最小时(θ0,θ1)坐标
 
 假设当有三个变量abc的时后
 h:根据abc变量区分的曲线,比如抛物线ax^2+bx+c
-J:每个(a,b,c)坐标对应一个J(a,b,c)的值,看作三维空间上深浅不同的点形成的彩色星云,或者四维展开显示数值,成为流星云,三维空间的等高面(卷心菜和模糊的叠影的卷心菜)可以描述其形状
+J:每个(a,b,c)坐标对应一个J(a,b,c)的值,看作三维空间上深浅不同的点形成的彩色星云,三维空间的等高面(卷心菜和模糊的叠影的卷心菜)可以描述其形状
 Goal: J最小时(a,b,c)坐标
 
 假设有n个变量a,b,c,...n
-h:根据a,b,c...n区分的曲线,如n-1次方程ax^(n-1)+bx^(n-2)+cx^(n-3)+...+n
-J:每个(a,b,c,...n)坐标对应一个J(a,b,c,...n)的值,看作n维空间的深浅不同的点(n+1)维展开显示其数值
+h:根据a,b,c...n区分的曲线,如线性方程aX1+bX2+cX3+...+nXn
+J:每个(a,b,c,...n)坐标对应一个J(a,b,c,...n)的值,看作n维空间的葡萄架子,每一个维度都追求最小.
 Goal: J最小时(a,b,c...n)坐标
 
-回归问题思路之一:底层的无杠之杠(n之杠)变身其最短之花串,依次变杠为串,直到找出最小的花串.
-回归问题思路之二:*梯度下降法
+取[a;b;c...;n]=Vectorsθ=[θ1;θ2;...;θn]
+取training set数据MatrixX:
+ 	[1  X₁₂...X₁n
+ 	 1  X₂₂...X₂n
+	    ...
+	 1  Xm₂...Xmn]
+Vectorsθ=[θ0;θ1;θ2;...;θn]
+training set数据Vector_Y=[y1;y2...;ym]
+  	  m
+J(θ)=1/2m*Σ(h(xij)-yi)^2=1/2m * sum((MatrixX*Vectorsθ-Vector_Y).^2)
+	 i=1
 
-1.1.1
+1) 最小求解:梯度下降法
 *Supervision_regression_Gradient descent梯度下降法(除了线性回归,其它地方也用得上)
 aka:"Batch" Gradient Descent(因每次求便导,都要全体数据计算差值求loss function)
 outline:
 1.start with some θ0,θ1,θ2,...,θn say θ0=0, θ1=0,...,θn=0
 2.keep changing  θ0,θ1,θ2,...,θn to reduce J(a,b,c...n) until hopfully we end up at a minumum
 e.g.
-递归思想: θ0,θ1,θ2,...,θn-1不变的值如0, θn小小的变化(理想是每串花遍历,连续的情况只能跳着来)着直到找到这种情况下 θn之杠的相对最小,回归成θn-1杠上的一串长花,变化,n-1小小变化,每一个变化类比n梯度变化得到n-1杠上的不同花,直到n-1变成无杠之花,以此类推,最终得到主杠a上的最长花串
-梯度下降思想:在成波搓的花串的某个起始花朵末端,放眼望去以下降最快的方式攀越到附近(或者是本地)的一个最接地气的花串,直到再无可攀的花,已经在最这小片花的最下了;在选择花串大小的时候,其实已经选择了梯度,因为连续变化的情况下,花串是无限小的;在只有 θ0,θ1的情况下,平面上每个点只有一串花
 
 repeat until convergence{
-θj:= θj - α∂/∂θj J(θ1,θ2,...,θn) (for j=1,2,...n)
+θj:= θj - α∂/∂θj J(θ0;θ1,θ2,...,θn) (for j=0,1,2,...n)
 }
 
 α:learning rate,梯度的大小
-∂/∂θj J(θ1,θ2,...θn):(θ1,θ1,...θn)位置的*(偏)导数
-simultaneously update θ1,... θn
-
+∂/∂θj J(θ):(θ0;θ1,θ1,...θn)位置的*(偏)导数
+simultaneously update θ0,... θn
+梯度下降: j的偏导数绝对值越大,下降越快,无论正负都是向下,偏导数0在局部最下,损失函数J永远凸函数,局部就是最值
 *(偏)导数
 ^J(θj)
 |.	 .
@@ -134,14 +144,11 @@ simultaneously update θ1,... θn
 +------------>θj
 
 j=1时,一维时,
-x点,梯度下降取θ1:θ1- α∂/∂θ1 J(θ1),
-∂/∂θ1 J(θ1) 是(θ1)维度x点的(偏)导数,即x点的斜率,记作k
-因α>0,所以下一位置会左移kα的值,k越大,左移动的越快,大刀阔斧,k越小,反而慢慢来,寻找最值,k=0原地不动,找到最值
-梯度下降看作是沿-θj轴偏移kα的值
+∂/∂θ0 J(θ0) 是(θ0)维度x点的(偏)导数,即x点的斜率,记作k
 
 如x的偏导数仍然可导,即斜线是一定角度的斜面,保持θj数值面夹角斜率kj的同时,θj+1数值面x点的切面,斜线x点
 相切,偏导斜率kj+1; 易证此时斜面和曲面相切**
-沿着-θ1,-θ2,...-θn移动k1α,k2α,...knα,重复直到k1=k2=...=kn=0,躺平不动
+沿着-θ0,-θ0,...-θn移动k1α,k2α,...knα,重复直到k1=k2=...=kn=0,躺平不动
 
 **想像一个爪篱,相交直线交点上相切的曲线,其曲面和直线相交的平面相切
   .    *  .     
@@ -153,32 +160,72 @@ x点,梯度下降取θ1:θ1- α∂/∂θ1 J(θ1),
 
 偏导数计算
 				  m			
-∂/∂θj J(θ1,θ2,...θn)=∂/∂θj (1/2m)*∑ (hθ(xi)-yi)^2 
+∂/∂θj J(θ0,θ1,...θn)=∂/∂θj (1/2m)*∑ (hθ(xi)-yi)^2 
                 		  i=1			 
-(#微积分#)
-47个房价样本案例:hθ(x)=θ2*x+θ1
-	    47
-j=1: (1/47)*∑ (hθ(xi)-yi)*1 :θ1和数值维度的导数
-	    i=1
-	   47
-j=2: (1/47)*∑ (hθ(xi)-yi)*xi :θ2和数值维度的偏导数
-	   i=1
-(xi,yi,m都是常数,之和θ1,θ2,...θn有关)
-(偏导数求导需要把除自身意外的变量当作常数对待,
+e.g.
+xi,yi,m都是常数,θ0,θ1,...θn是当前值确定的变量
+偏导数求导需要把除自身外的变量当作常数对待,需要对θ0,θ1,...θn分别求导
 复合函数求导:
-设u=g(x)，对f(u)求导得：f'(x)=f'(u)*g'(x)；
-u(x),v(x)可导： (u±v)′=u′±v′ (uv)′=u′v+uv′ (u/v)=(u′v-uv′)/v² (v≠0)
-)
-θ1=θ2=0
-α=0.01
-xi=[2104 1416...600]
-yi=[260 232 ...100]
-theta=zeros(2,1)
-repeat until convergence{
-			47
-θj:= θj - α∂/∂θj (1/94)*∑ (θ2*xi+θ1-yi)^2 (for j=1,2)
-			i=1
-}
+对f'(g(x))=f'(x)*g'(x)；
+u(x),v(x)可导则：(u±v)′=u′±v′ (uv)′=u′v+uv′ (u/v)=(u′v-uv′)/v² (v≠0)
+前:
+Vectorsθ=[θ0;θ1;θ2;...;θn]
+MatrixX:
+        [1  X₁₂...X₁n
+         1  X₂₂...X₂n
+            ...
+         1  Xm₂...Xmn]
+Vector_Y=[y1;y2...;ym]
+          m
+J(θ)=1/2m*Σ(h(xij)-yi)^2=1/2m * sum((MatrixX*Vectorsθ-Vector_Y).^2)
+         i=1   	
+可得∂/∂θ Vector_J(θ) = 1/m * MatrixX'*(MatrixX*Vectorsθ-Vector_Y)
+梯度下降:
+for iter = 1:num_iters
+    Vectorsθ = Vectorsθ - alpha/m*MatrixX'*(MatrixX*Vectorsθ'-Vector_Y); 
+end
+若m,num_iters为常数, 时间复杂度mn+(m(n+1)+m)约为O(n)?
 
-1.1.2
-*Normal equations methods正规方程组方法
+数据预处理
+1.FeatureScaling 特征缩放
+如果X⁽¹⁾:0-2000feet², X⁽²⁾:1-5 rooms;则梯度下降可能会像是在铜锣烧里面,alpha面对的不是一个数量级的偏导,很可能这边大了,那边意思不够,来回震荡
+怎么办呢? X⁽¹⁾/2000; X⁽²⁾/5
+get every feature into approximately -1<=Xi<=1
+
+2.Mean normalization均值归一化
+(do not apply to X⁽⁰⁾=1,otherwise,θ0会毫无意义)
+	   _				      _
+X⁽ⁿ⁾=(X⁽ⁿ⁾-X⁽ⁿ⁾)/(Xmax-Xmin) or (X⁽ⁿ⁾-X⁽ⁿ⁾)/σ(X)  [sigma σ 表示标准差,平均平方和开根号]
+e.g. X⁽¹⁾=(X⁽¹⁾-1000)/2000; X⁽²⁾=(X⁽²⁾-2)/5;
+
+学习率调整
+α 0.001 0.003 0.01 .03 .1 .3 1
+特征选择
+平方之,根号之,互相乘...
+
+2) 正规方程法Normal Equation#直接求得最小值
+求导 每个偏导数都是0
+假设特征值Matrix X:(X',design matrix, each vector作为特征向量ℝ ⁿ⁺¹)
+        [1  X₁₂...X₁n
+         1  X₂₂...X₂n
+            ...
+         1  Xm₂...Xmn]
+
+Vector y=[y1;y2...;ym]
+结论: Vectors θ= pinv(X'*X)*X'*y,
+ 	A= ℝ ⁿ*ⁿ,det(A)时间复杂度为2n(每个数字被算了两次)? pinv(A)时间复杂度约2n³(共有n²个数字)?
+	所以时间复杂度约为 2(n+1)³+2m*(n+1)²+m*(n+1)约为O(n³)?
+
+证明:∂/∂θ Vector_J(θ) =1/m * X'*(X*θ-y) = zeros(n+1,1)
+即 X'*(X*pinv(X'*X)*X'*y-y) = zeros(n+1,1)
+因为(X'*X)*pinv(X'*X)=I
+结合率得到 X'*(X*pinv(X'*X)) = I
+单位向量性质得到(X*pinv(X'*X))*X'=I
+即X*pinv(X'*X)*X'=I
+所以左边等于 X'*(y-y)=zeros(n+1,1)=右边; 证明完毕
+逆推回去只要求解 X*θ=y
+X*X'*pinv(X*X')*y=y
+所以also θ=X'*pinv(X*X')*y
+
+对比 1) 梯度下降和 2)正规方程法 
+如果 特征值n非常非常大 e.g.>10000; 2)的O(n³)会比较慢 建议采用梯度下降法
